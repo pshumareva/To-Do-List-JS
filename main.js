@@ -1,30 +1,30 @@
 window.addEventListener("load", () => {
   //todos is a global variable, because its not declared with "const", "let" or "var"
-  todos = JSON.parse(localStorage.getItem('todos')) || [];
-	const nameInput = document.querySelector('#name');
-	const newTodoForm = document.querySelector('#new-todo-form');
+  todos = JSON.parse(localStorage.getItem("todos")) || [];
+  const nameInput = document.querySelector("#name");
+  const newTodoForm = document.querySelector("#new-todo-form");
 
-	const username = localStorage.getItem('username') || '';
+  const username = localStorage.getItem("username") || "";
 
-	nameInput.value = username;
+  nameInput.value = username;
 
-	nameInput.addEventListener('change', (e) => {
-		localStorage.setItem('username', e.target.value);
-	})
+  nameInput.addEventListener("change", (e) => {
+    localStorage.setItem("username", e.target.value);
+  });
   //changes value in localStorage by username
-  newTodoForm.addEventListener('submit', e => {
+  newTodoForm.addEventListener("submit", (e) => {
     e.preventDefault();
 
     const todo = {
-        content: e.target.elements.content.value,
-        category: e.target.elements.category.value,
-        done: false,
-        createdAt: new Date().getTime()
-    }
+      content: e.target.elements.content.value,
+      category: e.target.elements.category.value,
+      done: false,
+      createdAt: new Date().getTime(),
+    };
 
     todos.push(todo);
 
-    localStorage.setItem('todos', JSON.stringify(todos));
+    localStorage.setItem("todos", JSON.stringify(todos));
 
     // Reset the form
     e.target.reset();
@@ -33,14 +33,16 @@ window.addEventListener("load", () => {
     DisplayTodos();
   });
 
-  DisplayTodos()
+  DisplayTodos();
 });
 
 function DisplayTodos() {
   const todoList = document.querySelector("#todo-list");
   todoList.innerHTML = "";
 
-  todos.forEach((todo) => {
+  const sortedList = todos.sort((a, b) => b.createdAt - a.createdAt);
+  
+  sortedList.forEach((todo) => {
     const todoItem = document.createElement("div");
     todoItem.classList.add("todo-item");
 
@@ -96,26 +98,24 @@ function DisplayTodos() {
       DisplayTodos();
     });
 
-
     //changing the name of todo item
-    edit.addEventListener('click', (e) => {
-        const input = content.querySelector('input');
-        input.removeAttribute('readonly');
-        input.focus();
-        //The blur event fires when an element has lost focus. 
-        input.addEventListener('blur', (e) => {
-            input.setAttribute('readonly', true);
-            todo.content = e.target.value;
-            localStorage.setItem('todos', JSON.stringify(todos));
-            DisplayTodos()
+    edit.addEventListener("click", (e) => {
+      const input = content.querySelector("input");
+      input.removeAttribute("readonly");
+      input.focus();
+      //The blur event fires when an element has lost focus.
+      input.addEventListener("blur", (e) => {
+        input.setAttribute("readonly", true);
+        todo.content = e.target.value;
+        localStorage.setItem("todos", JSON.stringify(todos));
+        DisplayTodos();
+      });
+    });
 
-        })
-    })
-
-    deleteButton.addEventListener('click', (e) => {
-        todos = todos.filter(t => t != todo);
-        localStorage.setItem('todos', JSON.stringify(todos));
-        DisplayTodos()
-    })
+    deleteButton.addEventListener("click", (e) => {
+      todos = todos.filter((t) => t != todo);
+      localStorage.setItem("todos", JSON.stringify(todos));
+      DisplayTodos();
+    });
   });
 }
